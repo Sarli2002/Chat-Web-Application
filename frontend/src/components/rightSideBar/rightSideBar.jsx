@@ -23,6 +23,7 @@ const RightSidebar = () => {
     try {
       // Clear user data from local storage or context
       localStorage.removeItem('token'); // Assuming you store JWT in local storage
+      navigate('/login');
       setUserData(null); // Reset user data in the context
       toast.success('Logged out successfully!');
     } catch (error) {

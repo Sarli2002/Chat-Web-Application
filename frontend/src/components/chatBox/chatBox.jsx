@@ -47,8 +47,8 @@ const ChatBox = () => {
           // Filter messages to include only those between the current user and the chat user
           const filteredMessages = response.data.filter(
             (msg) => 
-              (msg.sId._id === userData._id && msg.rId._id === chatUser._id) ||
-            (msg.sId._id === chatUser._id && msg.rId._id === userData._id)
+              (msg.sId === userData._id && msg.rId === chatUser._id) ||
+            (msg.sId === chatUser._id && msg.rId === userData._id)
           );
   
           // Set the filtered messages to the state
@@ -162,7 +162,7 @@ const ChatBox = () => {
     .slice() // Create a shallow copy of the array to avoid mutating the original array
     .reverse() // Reverse the array so that the most recent message is at the bottom
     .map((msg, index) => {
-      const isSentByUser = msg.sId._id === userData._id;
+      const isSentByUser = msg.sId === userData._id;
       
       return (
         <div key={index} className={isSentByUser ? 's-msg' : 'r-msg'}>

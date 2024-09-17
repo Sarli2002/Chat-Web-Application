@@ -15,7 +15,7 @@ const ChatBox = () => {
 
   useEffect(() => {
     // Initialize Socket.IO client connection
-    socket.current = io('http://localhost:3001'); // Update this to your backend URL
+    socket.current = io('https://chat-web-application-backend.onrender.com'); // Update this to your backend URL
 
     // Join chat room with the current user
     if (userData) {
@@ -39,7 +39,7 @@ const ChatBox = () => {
       if (chatUser && userData) {
         try {
           // Fetch all messages from the API
-          const response = await axios.get('http://localhost:3001/messages/', {
+          const response = await axios.get('https://chat-web-application-backend.onrender.com/messages/', {
             headers: { Authorization: `Bearer ${token}` },
           });
           
@@ -95,7 +95,7 @@ const ChatBox = () => {
 
       try {
         // Upload the image to your backend
-        const response = await axios.post('http://localhost:3001/upload', formData, {
+        const response = await axios.post('https://chat-web-application-backend.onrender.com/upload', formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 

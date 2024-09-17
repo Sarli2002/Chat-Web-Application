@@ -41,7 +41,7 @@ const ProfileUpdate = () => {
       }
 
       // Make API call to update profile
-      const response = await axios.put('http://localhost:3001/updateProfile', formData, {
+      const response = await axios.put('https://chat-web-application-backend.onrender.com/updateProfile', formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,

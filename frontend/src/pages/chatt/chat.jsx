@@ -17,7 +17,7 @@ const Chat = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/me', {
+        const response = await axios.get('https://chat-web-application-backend.onrender.com/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(response.data);
@@ -28,7 +28,7 @@ const Chat = () => {
 
     const fetchChatData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/messages/', {
+        const response = await axios.get('https://chat-web-application-backend.onrender.com/messages/', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setChatData(response.data);

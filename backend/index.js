@@ -73,7 +73,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
-  const imageUrl = `http://localhost:${PORT}/media/${req.file.filename}`;
+  const imageUrl = `https://chat-web-application-backend.onrender.com/media/${req.file.filename}`;
   console.log('Uploaded file URL:', imageUrl);
   res.status(200).json({ imageUrl });
 });

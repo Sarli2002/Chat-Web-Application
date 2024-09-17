@@ -31,7 +31,7 @@ const Login = () => {
     if (currState === "Sign up") {
       // Sign up logic using your MongoDB backend
       try {
-        const response = await axios.post('http://localhost:3001/signup', {username, email, password });
+        const response = await axios.post('https://chat-web-application-backend.onrender.com/signup', {username, email, password });
         toast.success('Account created successfully!');
         localStorage.setItem('token', response.data.token);
         navigate('/chat'); 
@@ -42,7 +42,7 @@ const Login = () => {
     } else {
       // Login logic using your MongoDB backend
       try {
-        const response = await axios.post('http://localhost:3001/login', { email, password });
+        const response = await axios.post('https://chat-web-application-backend.onrender.com/login', { email, password });
         toast.success('Login successful!');
         // Save the JWT token or any other required data from the response
         localStorage.setItem('token', response.data.token);

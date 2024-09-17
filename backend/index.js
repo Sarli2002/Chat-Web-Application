@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3001;
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'http://localhost:3000', // Allow requests from this origin
+    origin: 'https://chat-web-application-76ck.onrender.com', // Allow requests from this origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   }
@@ -22,7 +22,7 @@ const io = socketIo(server, {
 dotenv.config(); // Load environment variables
 app.use(express.json()); // To handle JSON payloads
 app.use(cors({
-  origin: 'http://localhost:3000', // Allow requests from this origin
+  origin: 'https://chat-web-application-76ck.onrender.com', // Allow requests from this origin
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   credentials: true // If you want to allow cookies or auth headers
 }));

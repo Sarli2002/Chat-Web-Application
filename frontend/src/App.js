@@ -23,7 +23,7 @@ const App = () => {
 
     const checkAuth = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/check', {
+        const response = await axios.get('https://chat-web-application-backend.onrender.com/check', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

@@ -215,7 +215,7 @@ app.put('/updateProfile', authenticateJWT, avatarUpload.single('avatar'), async 
 
     // If an avatar file is uploaded, process the file upload
     if (req.file) {
-      avatarUrl = `https://chat-web-application-76ck.onrender.com/avatars/${req.file.filename}`;  // Save the URL to the avatar
+      avatarUrl = `https://chat-web-application-backend.onrender.com/avatars/${req.file.filename}`;  // Save the URL to the avatar
     }
 
     // Extract user ID from JWT

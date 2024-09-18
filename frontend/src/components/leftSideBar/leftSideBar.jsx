@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const LeftSidebar = () => {
-  const { userData,setUserData, users, onlineUsers, setActiveChat, setChatVisible } = useContext(AppContext);
+  const { userData,setUserData, users, onlineUsers, setActiveChat, chatVisible, setChatVisible } = useContext(AppContext);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState(users);
   const navigate = useNavigate();

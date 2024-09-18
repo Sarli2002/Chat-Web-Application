@@ -176,7 +176,7 @@ const ChatBox = () => {
           )}
           <div className="msg-info">
             <img
-              src={isSentByUser ? userData.avatar : chatUser.avatar}
+              src={isSentByUser ? userData.avatar  || assets.blank_profile : chatUser.avatar  || assets.blank_profile}
               alt={isSentByUser ? "Your Avatar" : "Chat User Avatar"}
             />
             <p>{new Date(msg.createdAt).toLocaleTimeString()}</p>

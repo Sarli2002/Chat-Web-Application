@@ -138,4 +138,7 @@
     .chat-user .help{
         display: none;
     }
+    .hidden {
+        display: none;
+      }
 }

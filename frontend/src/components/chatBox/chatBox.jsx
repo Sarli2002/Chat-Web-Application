@@ -45,11 +45,14 @@ const ChatBox = () => {
           
          
           // Filter messages to include only those between the current user and the chat user
-          const filteredMessages = response.data.filter(
-            (msg) => 
-              (msg.sId._id === userData._id && msg.rId._id === chatUser._id) ||
-            (msg.sId_.id === chatUser._id && msg.rId._id === userData._id)
+          const filteredMessages = response.data.filter((msg) => {
+          const senderId = msg?.sId?._id;
+          const receiverId = msg?.rId?._id;
+          return (
+            (senderId === userData._id && receiverId === chatUser._id) ||
+            (senderId === chatUser._id && receiverId === userData._id)
           );
+        });
   
           // Set the filtered messages to the state
           setMessages(filteredMessages);
@@ -147,7 +150,7 @@ const ChatBox = () => {
               <p className="msg">{msg.text}</p>
             )}
             <div>
-              <img src={msg.sId === userData.id ? userData.avatar : chatUser.avatar} alt="Sender Avatar" />
+              <img src={msg.sId === userData.id ? userData.avatar || assets.blank_profile : chatUser.avatar || assets.blank_profile} alt="Sender Avatar" />
               <p>{new Date(msg.createdAt).toLocaleTimeString()}</p>
             </div>
           </div>

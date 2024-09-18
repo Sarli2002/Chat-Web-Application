@@ -56,7 +56,7 @@ const LeftSidebar = () => {
   };
 
   return (
-    <div className="left-sidebar">
+    <div className={`left-sidebar ${chatVisible ? "hidden" : ""}`}>
       <div className='ls-top'>
         <div className='ls-nav'>
           <img className='logo' src={assets.logo} alt="" />

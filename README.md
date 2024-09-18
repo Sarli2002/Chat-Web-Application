@@ -17,3 +17,5 @@ This is a real-time chat web application that allows users to engage in conversa
 - **MongoDB** – For database storage and management.
 - **JWT** – For authentication.
 
+## Deployment
+The application is deployed on Render. You can access the live version [here](https://chat-web-application-76ck.onrender.com).

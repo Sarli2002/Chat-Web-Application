@@ -162,7 +162,7 @@ const ChatBox = () => {
     .slice() // Create a shallow copy of the array to avoid mutating the original array
     .reverse() // Reverse the array so that the most recent message is at the bottom
     .map((msg, index) => {
-      const isSentByUser = msg?.sId._id === userData?._id;
+      const isSentByUser = msg?.sId?._id === userData?._id;
       
       return (
         <div key={index} className={isSentByUser ? 's-msg' : 'r-msg'}>

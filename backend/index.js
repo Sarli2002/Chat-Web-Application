@@ -4,6 +4,8 @@ const cors = require('cors');
 const path = require('path');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
+const User = require('./models/user');  
+const Message = require('./models/message');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
@@ -31,28 +33,6 @@ app.use(cors({
 mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log('MongoDB connected')).catch(err => console.log(err));
 
-
-// User Schema
-const UserSchema = new mongoose.Schema({
-  username: { type: String, required: true },
-  email: { type: String, unique: true, required: true },
-  password: { type: String, required: true },
-  avatar: { type: String },
-  bio: { type: String, default: "Hey, There I am using chat app" },
-  lastSeen: { type: Date, default: Date.now },
-  date: { type: Date, default: Date.now }
-});
-const User = mongoose.model('User', UserSchema);
-
-// Message Schema
-const MessageSchema = new mongoose.Schema({
-  sId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
-  rId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }, // receiver id
-  text: { type: String },
-  image: { type: String }, // URL to the image if any
-  createdAt: { type: Date, default: Date.now }
-});
-const Message = mongoose.model('Message', MessageSchema);
 
 // Multer configuration for file uploads
 const mediaStorage = multer.diskStorage({

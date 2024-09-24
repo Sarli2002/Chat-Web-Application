@@ -16,7 +16,11 @@ const ChatBox = () => {
 
   useEffect(() => {
     // Initialize Socket.IO client connection
+<<<<<<< HEAD
     socket.current = io(`${backend_url}`); // Update this to your backend URL
+=======
+    socket.current = io('https://chat-web-application-backend.onrender.com'); // Update this to your backend URL
+>>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
 
     // Join chat room with the current user
     if (userData) {
@@ -40,13 +44,18 @@ const ChatBox = () => {
       if (chatUser && userData) {
         try {
           // Fetch all messages from the API
+<<<<<<< HEAD
           const response = await axios.get(`${backend_url}/messages/`, {
+=======
+          const response = await axios.get('https://chat-web-application-backend.onrender.com/messages/', {
+>>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
             headers: { Authorization: `Bearer ${token}` },
           });
           
          
           // Filter messages to include only those between the current user and the chat user
           const filteredMessages = response.data.filter((msg) => {
+<<<<<<< HEAD
             const senderId = msg?.sId?._id;
             const receiverId = msg?.rId?._id;
             return (
@@ -54,6 +63,15 @@ const ChatBox = () => {
               (senderId === chatUser._id && receiverId === userData._id)
             );
           });
+=======
+          const senderId = msg?.sId?._id;
+          const receiverId = msg?.rId?._id;
+          return (
+            (senderId === userData._id && receiverId === chatUser._id) ||
+            (senderId === chatUser._id && receiverId === userData._id)
+          );
+        });
+>>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
   
           // Set the filtered messages to the state
           setMessages(filteredMessages);
@@ -100,7 +118,11 @@ const ChatBox = () => {
 
       try {
         // Upload the image to your backend
+<<<<<<< HEAD
         const response = await axios.post(`${backend_url}/upload`, formData, {
+=======
+        const response = await axios.post('https://chat-web-application-backend.onrender.com/upload', formData, {
+>>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 
@@ -140,6 +162,29 @@ const ChatBox = () => {
         />
         <img className="help" src={assets.help_icon} alt="Help" />
       </div>
+<<<<<<< HEAD
+=======
+      {/* <div className="chat-msg">
+      <div ref={scrollEnd}></div>
+        {
+         messages.map((msg, index) => {
+          return(
+          <div key={index} className={msg.sId === userData._id ? 'r-msg' : 's-msg'}>
+            {msg.image ? (
+              <img className="msg-img" src={msg.image} alt="Message" />
+            ) : (
+              <p className="msg">{msg.text}</p>
+            )}
+            <div>
+              <img src={msg.sId === userData.id ? userData.avatar || assets.blank_profile : chatUser.avatar || assets.blank_profile} alt="Sender Avatar" />
+              <p>{new Date(msg.createdAt).toLocaleTimeString()}</p>
+            </div>
+          </div>
+        )
+      })
+    }
+    </div> */}
+>>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
 
 <div className={`chat-msg`}>
   <div ref={scrollEnd}></div>
@@ -148,7 +193,10 @@ const ChatBox = () => {
     .reverse() 
     .map((msg, index) => {
       const isSentByUser = msg?.sId?._id === userData?._id;
+<<<<<<< HEAD
 
+=======
+>>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
       
       return (
         <div key={index} className={isSentByUser ? 's-msg' : 'r-msg'}>
@@ -159,7 +207,11 @@ const ChatBox = () => {
           )}
           <div className="msg-info">
             <img
+<<<<<<< HEAD
               src={isSentByUser ? userData.avatar || assets.blank_profile : chatUser.avatar || assets.blank_profile}
+=======
+              src={isSentByUser ? userData.avatar  || assets.blank_profile : chatUser.avatar  || assets.blank_profile}
+>>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
               alt={isSentByUser ? "Your Avatar" : "Chat User Avatar"}
             />
             <p>{new Date(msg.createdAt).toLocaleTimeString()}</p>

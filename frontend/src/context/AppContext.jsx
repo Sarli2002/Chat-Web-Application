@@ -21,7 +21,7 @@ export const AppProvider = ({ children }) => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/me', {
+        const response = await axios.get('https://chat-web-application-backend.onrender.com/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(response.data);
@@ -33,7 +33,7 @@ export const AppProvider = ({ children }) => {
 
     // const fetchChatData = async () => {
     //   try {
-    //     const response = await axios.get('http://localhost:3001/messages/', {
+    //     const response = await axios.get('https://chat-web-application-backend.onrender.com/', {
     //       headers: { Authorization: `Bearer ${token}` },
     //     });
     //     setChatData(response.data);
@@ -45,7 +45,7 @@ export const AppProvider = ({ children }) => {
 
     const fetchAllUsersData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/users', {
+        const response = await axios.get('https://chat-web-application-backend.onrender.com/users', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(response.data);

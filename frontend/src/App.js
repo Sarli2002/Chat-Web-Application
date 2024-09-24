@@ -23,7 +23,7 @@ const App = () => {
 
     const checkAuth = async () => {
       try {
-        const response = await axios.get(`${backend_url}/check`, {
+        const response = await axios.get('http://localhost:3001/check', {
           headers: { Authorization: `Bearer ${token}` },
         });
 

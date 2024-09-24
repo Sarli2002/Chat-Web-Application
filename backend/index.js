@@ -34,9 +34,11 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log('MongoDB connected')).catch(err => console.log(err));
 
 
+
+
 // Multer configuration for file uploads
 const mediaStorage = multer.diskStorage({
-  destination: './tmp/media/', 
+  destination: './upload/media/', 
   filename: (req, file, cb) => {
      cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`); 
   }
@@ -61,7 +63,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
 
 //Multer configuration for user avatar uploads
 const avatarStorage = multer.diskStorage({
-  destination: './tmp/avatars/',
+  destination: './upload/avatars/',
   filename: (req, file, cb) => {
     cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);  
   }

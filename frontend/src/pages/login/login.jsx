@@ -16,7 +16,7 @@ const Login = () => {
   useEffect(() => {
     if (currState === "Login") {
      setEmail('guest@gmail.com')
-     setPassword('guest')
+     setPassword('password')
     }
     else{
       setEmail("")

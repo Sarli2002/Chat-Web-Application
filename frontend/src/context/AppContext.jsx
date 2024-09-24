@@ -1,5 +1,6 @@
 import React, { createContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { backend_url } from '../App';
 
 // Create the context
 export const AppContext = createContext();
@@ -15,13 +16,12 @@ export const AppProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [messages, setMessages] = useState([]); // Store messages
 
-  const token = localStorage.getItem('token'); // Assuming token is stored in localStorage
+  const token = localStorage.getItem('token'); 
 
-  // Fetch user and chat data when the component mounts
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('https://chat-web-application-backend.onrender.com/me', {
+        const response = await axios.get(`${backend_url}/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(response.data);
@@ -31,21 +31,9 @@ export const AppProvider = ({ children }) => {
       }
     };
 
-    // const fetchChatData = async () => {
-    //   try {
-    //     const response = await axios.get('https://chat-web-application-backend.onrender.com/', {
-    //       headers: { Authorization: `Bearer ${token}` },
-    //     });
-    //     setChatData(response.data);
-    //     console.log(response.data);
-    //   } catch (error) {
-    //     console.error('Error fetching chat data:', error);
-    //   }
-    // };
-
     const fetchAllUsersData = async () => {
       try {
-        const response = await axios.get('https://chat-web-application-backend.onrender.com/users', {
+        const response = await axios.get(`${backend_url}/users`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUsers(response.data);
@@ -54,8 +42,24 @@ export const AppProvider = ({ children }) => {
       }
     };
 
+
+    const fetchMessages = async () => {
+      
+        try {
+          const response = await axios.get(`${backend_url}/messages/`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+  
+          setMessages(response.data);
+         
+        } catch (error) {
+          console.error('Error fetching messages:', error);
+        }
+      
+    };
+
     if (token) {
-      Promise.all([fetchUserData(), fetchAllUsersData()])
+      Promise.all([fetchUserData(), fetchAllUsersData(), fetchMessages()])
         .then(() => setLoading(false))
         .catch(() => setLoading(false));
     } else {
@@ -63,7 +67,7 @@ export const AppProvider = ({ children }) => {
     }
   }, [token]);
 
-  // Handle socket events for online and offline users
+
 
 
   return (

@@ -14,7 +14,7 @@ const PORT = process.env.PORT || 3001;
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'https://chat-web-application-76ck.onrender.com', // Allow requests from this origin
+    origin: true, // Allow requests from this origin
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   }
@@ -22,7 +22,7 @@ const io = socketIo(server, {
 dotenv.config(); // Load environment variables
 app.use(express.json()); // To handle JSON payloads
 app.use(cors({
-  origin: 'https://chat-web-application-76ck.onrender.com', // Allow requests from this origin
+  origin: true, // Allow requests from this origin
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   credentials: true // If you want to allow cookies or auth headers
 }));
@@ -73,7 +73,7 @@ app.post('/upload', upload.single('image'), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
-  const imageUrl = `https://chat-web-application-backend.onrender.com/media/${req.file.filename}`;
+  const imageUrl = `${process.env.BACKEND_URL}/media/${req.file.filename}`;
   console.log('Uploaded file URL:', imageUrl);
   res.status(200).json({ imageUrl });
 });
@@ -179,18 +179,6 @@ app.get('/users', authenticateJWT, async (req, res) => {
 });
 
 
-app.get('/user/:id', authenticateJWT, async (req, res) => {
-  try {
-    const userId = req.params.id; // Get user ID from URL params
-    const user = await User.findById(userId).select('username avatar bio lastSeen');
-    if (!user) return res.status(404).json({ message: 'User not found' });
-    res.status(200).json(user);
-  } catch (err) {
-    res.status(500).json({ message: 'Error fetching user' });
-  }
-});
-
-
 // Route to get current authenticated user's data
 app.get('/me', authenticateJWT, async (req, res) => {
   try {
@@ -215,7 +203,7 @@ app.put('/updateProfile', authenticateJWT, avatarUpload.single('avatar'), async 
 
     // If an avatar file is uploaded, process the file upload
     if (req.file) {
-      avatarUrl = `https://chat-web-application-backend.onrender.com/avatars/${req.file.filename}`;  // Save the URL to the avatar
+      avatarUrl = `${process.env.BACKEND_URL}/avatars/${req.file.filename}`;  // Save the URL to the avatar
     }
 
     // Extract user ID from JWT

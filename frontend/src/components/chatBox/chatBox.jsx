@@ -12,15 +12,28 @@ const ChatBox = () => {
   const [localmessages, setLocalMessages] = useState([]);
   const scrollEnd = useRef();
   const socket = useRef();
-  const token = localStorage.getItem('token'); 
+  
+
+  useEffect(() => {
+    // Filter global messages for the active chat user
+    if (chatUser && userData) {
+      const filteredMessages = messages.filter((msg) => {
+        const senderId = msg?.sId?._id;
+        const receiverId = msg?.rId?._id;
+        return (
+          (senderId === userData._id && receiverId === chatUser._id) ||
+          (senderId === chatUser._id && receiverId === userData._id)
+        );
+      });
+      setLocalMessages(filteredMessages);
+      console.log(filteredMessages);
+    }
+  }, [messages, chatUser, userData]); 
+
 
   useEffect(() => {
     // Initialize Socket.IO client connection
-<<<<<<< HEAD
     socket.current = io(`${backend_url}`); // Update this to your backend URL
-=======
-    socket.current = io('https://chat-web-application-backend.onrender.com'); // Update this to your backend URL
->>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
 
     // Join chat room with the current user
     if (userData) {
@@ -29,7 +42,7 @@ const ChatBox = () => {
 
     // Listen for incoming messages
     socket.current.on('newMessage', (newMessage) => {
-      setLocalMessages((prevMessages) => [...prevMessages, newMessage]);
+      //setLocalMessages((prevMessages) => [...prevMessages, newMessage]);
       setMessages((prevMessages) => [...prevMessages, newMessage]); 
     });
 
@@ -37,56 +50,6 @@ const ChatBox = () => {
       socket.current.disconnect();
     };
   }, [userData, setMessages]);
-
-  // Fetch messages from the backend between the two users when chatUser changes
-  useEffect(() => {
-    const fetchMessages = async () => {
-      if (chatUser && userData) {
-        try {
-          // Fetch all messages from the API
-<<<<<<< HEAD
-          const response = await axios.get(`${backend_url}/messages/`, {
-=======
-          const response = await axios.get('https://chat-web-application-backend.onrender.com/messages/', {
->>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
-            headers: { Authorization: `Bearer ${token}` },
-          });
-          
-         
-          // Filter messages to include only those between the current user and the chat user
-          const filteredMessages = response.data.filter((msg) => {
-<<<<<<< HEAD
-            const senderId = msg?.sId?._id;
-            const receiverId = msg?.rId?._id;
-            return (
-              (senderId === userData._id && receiverId === chatUser._id) ||
-              (senderId === chatUser._id && receiverId === userData._id)
-            );
-          });
-=======
-          const senderId = msg?.sId?._id;
-          const receiverId = msg?.rId?._id;
-          return (
-            (senderId === userData._id && receiverId === chatUser._id) ||
-            (senderId === chatUser._id && receiverId === userData._id)
-          );
-        });
->>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
-  
-          // Set the filtered messages to the state
-          setMessages(filteredMessages);
-          
-         
-        } catch (error) {
-          console.error('Error fetching messages:', error);
-        }
-      }
-    };
-  
-    fetchMessages();
-  }, [chatUser, token,userData]);
-  
-
 
   // Function to send a message
   const sendMessage = () => {
@@ -100,7 +63,7 @@ const ChatBox = () => {
   
       // Emit the message via Socket.IO
       socket.current.emit('sendMessage', newMessage);
-     
+      
   
       // Clear the input after sending
       setInput('');
@@ -118,11 +81,7 @@ const ChatBox = () => {
 
       try {
         // Upload the image to your backend
-<<<<<<< HEAD
         const response = await axios.post(`${backend_url}/upload`, formData, {
-=======
-        const response = await axios.post('https://chat-web-application-backend.onrender.com/upload', formData, {
->>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 
@@ -135,6 +94,7 @@ const ChatBox = () => {
           createdAt: new Date().toISOString(), // Add current timestamp
         };
         socket.current.emit('sendMessage', newMessage);
+        
      
       } catch (error) {
         console.error('Error uploading image:', error);
@@ -145,7 +105,7 @@ const ChatBox = () => {
  
   useEffect(() => {
     scrollEnd.current?.scrollIntoView({ behavior: 'smooth' });
-  }, [messages]);
+  }, [messages, localmessages]);
 
   return chatUser ? (
     <div className={`chat-box ${chatVisible ? '' : 'hidden'}`}>
@@ -162,41 +122,14 @@ const ChatBox = () => {
         />
         <img className="help" src={assets.help_icon} alt="Help" />
       </div>
-<<<<<<< HEAD
-=======
-      {/* <div className="chat-msg">
-      <div ref={scrollEnd}></div>
-        {
-         messages.map((msg, index) => {
-          return(
-          <div key={index} className={msg.sId === userData._id ? 'r-msg' : 's-msg'}>
-            {msg.image ? (
-              <img className="msg-img" src={msg.image} alt="Message" />
-            ) : (
-              <p className="msg">{msg.text}</p>
-            )}
-            <div>
-              <img src={msg.sId === userData.id ? userData.avatar || assets.blank_profile : chatUser.avatar || assets.blank_profile} alt="Sender Avatar" />
-              <p>{new Date(msg.createdAt).toLocaleTimeString()}</p>
-            </div>
-          </div>
-        )
-      })
-    }
-    </div> */}
->>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
 
 <div className={`chat-msg`}>
   <div ref={scrollEnd}></div>
-  {messages
+  {localmessages
     .slice() 
     .reverse() 
     .map((msg, index) => {
       const isSentByUser = msg?.sId?._id === userData?._id;
-<<<<<<< HEAD
-
-=======
->>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
       
       return (
         <div key={index} className={isSentByUser ? 's-msg' : 'r-msg'}>
@@ -207,11 +140,7 @@ const ChatBox = () => {
           )}
           <div className="msg-info">
             <img
-<<<<<<< HEAD
               src={isSentByUser ? userData.avatar || assets.blank_profile : chatUser.avatar || assets.blank_profile}
-=======
-              src={isSentByUser ? userData.avatar  || assets.blank_profile : chatUser.avatar  || assets.blank_profile}
->>>>>>> 9f0bf90f5ae3f20bf9ad1cdd5de8cdaadfd5b8e9
               alt={isSentByUser ? "Your Avatar" : "Chat User Avatar"}
             />
             <p>{new Date(msg.createdAt).toLocaleTimeString()}</p>
@@ -220,11 +149,6 @@ const ChatBox = () => {
       );
     })}
 </div>
-
-
-
-
-
 
       <div className="chat-input">
       <input onKeyDown={(e) => e.key === "Enter" ? sendMessage() : null} onChange={(e) => setInput(e.target.value)} value={input} type="text" placeholder='Send a message' />

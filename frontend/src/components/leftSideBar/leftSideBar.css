@@ -1,7 +1,7 @@
 .left-sidebar {
     background: #001030;
     color: white;
-    height: 75vh;
+    height: 100vh;
 }
 
 .ls-top {
@@ -88,7 +88,7 @@
 }
 
 .ls-list::-webkit-scrollbar {
-    display: none; /* Hide scrollbar */
+    display: none; 
   }
 .friends {
     display: flex;
@@ -143,5 +143,8 @@
 @media (max-width:900px) {
     .left-sidebar {
         width: 100%;
+    }
+    .hidden{
+        display: none;
     }
 }

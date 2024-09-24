@@ -21,11 +21,8 @@ const RightSidebar = () => {
 
   const logout = async () => {
     try {
-      // Clear user data from local storage or context
-      localStorage.removeItem('token'); // Assuming you store JWT in local storage
-      setUserData(null); // Reset user data in the context
-
-      // Navigate to login or home page after logout
+      localStorage.removeItem('token'); 
+      setUserData(null); 
       navigate('/login');
       toast.success('Logged out successfully!');
     } catch (error) {

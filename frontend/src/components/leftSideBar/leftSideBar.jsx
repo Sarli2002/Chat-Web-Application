@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 
 
 const LeftSidebar = () => {
-  const { userData,setUserData, users, onlineUsers, setActiveChat, setChatVisible } = useContext(AppContext);
+  const { chatVisible, userData,setUserData, users, onlineUsers, setActiveChat, setChatVisible } = useContext(AppContext);
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredUsers, setFilteredUsers] = useState(users);
   const navigate = useNavigate();
@@ -25,12 +25,12 @@ const LeftSidebar = () => {
     }
   }, [searchQuery, users]);
 
-  // Handle search input change
+  
   const handleSearchChange = (e) => {
     setSearchQuery(e.target.value);
   };
 
-  // Handle user selection and starting a chat
+
   const startChatWithUser = (user) => {
     try {
       setActiveChat(user);  // Set the active chat with the selected user
@@ -56,7 +56,7 @@ const LeftSidebar = () => {
   };
 
   return (
-    <div className="left-sidebar">
+    <div className= {`left-sidebar ${chatVisible ? "hidden" : ""}`}>
       <div className='ls-top'>
         <div className='ls-nav'>
           <img className='logo' src={assets.logo} alt="" />
@@ -88,7 +88,7 @@ const LeftSidebar = () => {
           <div
             key={user._id}
             className={`${onlineUsers.has(user._id) ? 'online' : 'offline'} friends`}
-            onClick={() => startChatWithUser(user)} // Start a chat when clicked
+            onClick={() => startChatWithUser(user)} 
           >
             <img src={user.avatar || assets.blank_profile } className="profilepic" alt="avatar" />
             <div>

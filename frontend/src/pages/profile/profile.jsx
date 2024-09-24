@@ -1,7 +1,8 @@
 import React, { useContext, useState, useEffect } from 'react';
 import './profile.css';
 import assets from '../../assets/assets';
-import axios from 'axios'; // Axios for making API calls
+import axios from 'axios'; 
+import { backend_url } from '../../App';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { AppContext } from '../../context/AppContext';
@@ -15,17 +16,17 @@ const ProfileUpdate = () => {
   const token = localStorage.getItem('token');
   useEffect(() => {
     if (userData) {
-      setPrevImage(userData.avatar);  // Set previous avatar from user data
-      setBio(userData.bio || "");     // Set bio if available
+      setPrevImage(userData.avatar);  
+      setBio(userData.bio || "");     
     }
   }, [userData]);
 
-  // Profile update handler
+
   const profileUpdate = async (event) => {
     event.preventDefault();
 
     try {
-      // Check if both previous and current image are missing
+      
       if (!prevImage && !image) {
         toast.error("Please upload a profile picture");
         return;
@@ -40,8 +41,8 @@ const ProfileUpdate = () => {
         formData.append('avatar', image);
       }
 
-      // Make API call to update profile
-      const response = await axios.put('http://localhost:3001/updateProfile', formData, {
+     
+      const response = await axios.put(`${backend_url}/updateProfile`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
           Authorization: `Bearer ${token}`,

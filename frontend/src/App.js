@@ -6,13 +6,13 @@ import axios from 'axios';
 import Chat from './pages/chatt/chat';
 import Login from './pages/login/login';
 import ProfileUpdate from './pages/profile/profile';
-
+export const backend_url = process.env.REACT_APP_BACKEND_URL;
 const App = () => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
   const token = localStorage.getItem('token');
-  
+ 
 
   useEffect(() => {
     if (!token) {
@@ -23,7 +23,7 @@ const App = () => {
 
     const checkAuth = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/check', {
+        const response = await axios.get(`${backend_url}/check`, {
           headers: { Authorization: `Bearer ${token}` },
         });
 

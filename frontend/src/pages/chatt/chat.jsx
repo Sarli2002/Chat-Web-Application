@@ -3,6 +3,7 @@ import './chat.css';
 import LeftSidebar from '../../components/leftSideBar/leftSideBar';
 import ChatBox from '../../components/chatBox/chatBox';
 import axios from 'axios';
+import { backend_url } from '../../App';
 import { AppContext } from '../../context/AppContext';
 import RightSidebar from '../../components/rightSideBar/rightSideBar';
 
@@ -17,7 +18,7 @@ const Chat = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/me', {
+        const response = await axios.get(`${backend_url}/me`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUserData(response.data);
@@ -28,7 +29,7 @@ const Chat = () => {
 
     const fetchChatData = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/messages/', {
+        const response = await axios.get(`${backend_url}/messages/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setChatData(response.data);
@@ -61,7 +62,6 @@ const Chat = () => {
          <div className="chat-container">
         
           <LeftSidebar />
-          
           <ChatBox />
             <RightSidebar/>
             

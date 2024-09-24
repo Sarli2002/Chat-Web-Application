@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import assets from '../../assets/assets';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import { backend_url } from '../../App';
 
 const Login = () => {
   const [currState, setCurrState] = useState("Login");  // Default state to "Login"
@@ -16,7 +16,7 @@ const Login = () => {
   useEffect(() => {
     if (currState === "Login") {
      setEmail('guest@gmail.com')
-     setPassword('password')
+     setPassword('guest')
     }
     else{
       setEmail("")
@@ -31,7 +31,7 @@ const Login = () => {
     if (currState === "Sign up") {
       // Sign up logic using your MongoDB backend
       try {
-        const response = await axios.post('http://localhost:3001/signup', {username, email, password });
+        const response = await axios.post(`${backend_url}/signup`, {username, email, password });
         toast.success('Account created successfully!');
         localStorage.setItem('token', response.data.token);
         navigate('/chat'); 
@@ -42,7 +42,7 @@ const Login = () => {
     } else {
       // Login logic using your MongoDB backend
       try {
-        const response = await axios.post('http://localhost:3001/login', { email, password });
+        const response = await axios.post(`${backend_url}/login`, { email, password });
         toast.success('Login successful!');
         // Save the JWT token or any other required data from the response
         localStorage.setItem('token', response.data.token);

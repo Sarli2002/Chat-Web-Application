@@ -3,7 +3,8 @@ import './chatBox.css';
 import assets from '../../assets/assets';
 import axios from 'axios';
 import { io } from 'socket.io-client';
-import { AppContext } from '../../context/AppContext'; // Import the AppContext
+import { backend_url } from '../../App';
+import { AppContext } from '../../context/AppContext'; 
 
 const ChatBox = () => {
   const { userData, activeChat: chatUser, chatVisible, setChatVisible, messages, setMessages } = useContext(AppContext);
@@ -15,7 +16,7 @@ const ChatBox = () => {
 
   useEffect(() => {
     // Initialize Socket.IO client connection
-    socket.current = io('http://localhost:3001'); // Update this to your backend URL
+    socket.current = io(`${backend_url}`); // Update this to your backend URL
 
     // Join chat room with the current user
     if (userData) {
@@ -25,7 +26,7 @@ const ChatBox = () => {
     // Listen for incoming messages
     socket.current.on('newMessage', (newMessage) => {
       setLocalMessages((prevMessages) => [...prevMessages, newMessage]);
-      setMessages((prevMessages) => [...prevMessages, newMessage]); // Update global state
+      setMessages((prevMessages) => [...prevMessages, newMessage]); 
     });
 
     return () => {
@@ -39,20 +40,24 @@ const ChatBox = () => {
       if (chatUser && userData) {
         try {
           // Fetch all messages from the API
-          const response = await axios.get('http://localhost:3001/messages/', {
+          const response = await axios.get(`${backend_url}/messages/`, {
             headers: { Authorization: `Bearer ${token}` },
           });
           
          
           // Filter messages to include only those between the current user and the chat user
-          const filteredMessages = response.data.filter(
-            (msg) => 
-              (msg.sId._id === userData._id && msg.rId._id === chatUser._id) ||
-            (msg.sId._id === chatUser._id && msg.rId._id === userData._id)
-          );
+          const filteredMessages = response.data.filter((msg) => {
+            const senderId = msg?.sId?._id;
+            const receiverId = msg?.rId?._id;
+            return (
+              (senderId === userData._id && receiverId === chatUser._id) ||
+              (senderId === chatUser._id && receiverId === userData._id)
+            );
+          });
   
           // Set the filtered messages to the state
           setMessages(filteredMessages);
+          
          
         } catch (error) {
           console.error('Error fetching messages:', error);
@@ -69,8 +74,8 @@ const ChatBox = () => {
   const sendMessage = () => {
     if (input.trim()) {
       const newMessage = {
-        sId: { _id: userData._id },  // Structure that matches the backend
-        rId: { _id: chatUser._id },  // Structure that matches the backend
+        sId: { _id: userData._id } , 
+        rId: { _id: chatUser._id },  
         text: input.trim(),
         createdAt: new Date().toISOString(), // Add current timestamp
       };
@@ -95,15 +100,15 @@ const ChatBox = () => {
 
       try {
         // Upload the image to your backend
-        const response = await axios.post('http://localhost:3001/upload', formData, {
+        const response = await axios.post(`${backend_url}/upload`, formData, {
           headers: { 'Content-Type': 'multipart/form-data' },
         });
 
         const fileUrl = response.data.imageUrl;
        
         const newMessage = {
-          sId: { _id: userData._id },  // Structure that matches the backend
-          rId: { _id: chatUser._id },  // Structure that matches the backend
+          sId: { _id: userData._id },  
+          rId: { _id: chatUser._id },  
           image: fileUrl,
           createdAt: new Date().toISOString(), // Add current timestamp
         };
@@ -115,7 +120,7 @@ const ChatBox = () => {
     }
   };
 
-  // Scroll to the end when messages are updated
+ 
   useEffect(() => {
     scrollEnd.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
@@ -135,34 +140,15 @@ const ChatBox = () => {
         />
         <img className="help" src={assets.help_icon} alt="Help" />
       </div>
-      {/* <div className="chat-msg">
-      <div ref={scrollEnd}></div>
-        {
-         messages.map((msg, index) => {
-          return(
-          <div key={index} className={msg.sId === userData._id ? 'r-msg' : 's-msg'}>
-            {msg.image ? (
-              <img className="msg-img" src={msg.image} alt="Message" />
-            ) : (
-              <p className="msg">{msg.text}</p>
-            )}
-            <div>
-              <img src={msg.sId === userData.id ? userData.avatar : chatUser.avatar} alt="Sender Avatar" />
-              <p>{new Date(msg.createdAt).toLocaleTimeString()}</p>
-            </div>
-          </div>
-        )
-      })
-    }
-    </div> */}
 
 <div className={`chat-msg`}>
   <div ref={scrollEnd}></div>
   {messages
-    .slice() // Create a shallow copy of the array to avoid mutating the original array
-    .reverse() // Reverse the array so that the most recent message is at the bottom
+    .slice() 
+    .reverse() 
     .map((msg, index) => {
-      const isSentByUser = msg.sId._id === userData._id;
+      const isSentByUser = msg?.sId?._id === userData?._id;
+
       
       return (
         <div key={index} className={isSentByUser ? 's-msg' : 'r-msg'}>
@@ -173,7 +159,7 @@ const ChatBox = () => {
           )}
           <div className="msg-info">
             <img
-              src={isSentByUser ? userData.avatar : chatUser.avatar}
+              src={isSentByUser ? userData.avatar || assets.blank_profile : chatUser.avatar || assets.blank_profile}
               alt={isSentByUser ? "Your Avatar" : "Chat User Avatar"}
             />
             <p>{new Date(msg.createdAt).toLocaleTimeString()}</p>

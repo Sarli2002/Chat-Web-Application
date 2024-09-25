@@ -1,6 +1,7 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
+const path = require('path');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const User = require('./models/user');  
@@ -13,7 +14,7 @@ const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const dotenv = require('dotenv');
 const app = express();
 const PORT = process.env.PORT || 3001;
-
+app.use('/favicon.ico', express.static(path.join(__dirname, 'favicon.ico')));
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {

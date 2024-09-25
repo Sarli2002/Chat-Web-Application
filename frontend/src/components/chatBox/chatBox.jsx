@@ -32,17 +32,18 @@ const ChatBox = () => {
 
 
   useEffect(() => {
-    // Initialize Socket.IO client connection
-    socket.current = io(`${backend_url}`); // Update this to your backend URL
+    
+    socket.current = io(`${backend_url}`, {
+      transports: ['websocket', 'polling']
+    }); 
 
-    // Join chat room with the current user
+    
     if (userData) {
       socket.current.emit('join', { userId: userData.id });
     }
 
-    // Listen for incoming messages
     socket.current.on('newMessage', (newMessage) => {
-      //setLocalMessages((prevMessages) => [...prevMessages, newMessage]);
+      
       setMessages((prevMessages) => [...prevMessages, newMessage]); 
     });
 
@@ -58,7 +59,7 @@ const ChatBox = () => {
         sId: { _id: userData._id } , 
         rId: { _id: chatUser._id },  
         text: input.trim(),
-        createdAt: new Date().toISOString(), // Add current timestamp
+        createdAt: new Date().toISOString(), 
       };
   
       // Emit the message via Socket.IO

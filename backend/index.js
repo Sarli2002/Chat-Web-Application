@@ -18,7 +18,7 @@ app.use('/favicon.ico', express.static(path.join(__dirname, 'favicon.ico')));
 const server = http.createServer(app);
 const io = socketIo(server, {
   cors: {
-    origin: 'https://chat-web-application-puce.vercel.app',
+    origin: process.env.FRONTEND_URL,
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
   },
@@ -27,7 +27,7 @@ const io = socketIo(server, {
 dotenv.config(); // Load environment variables
 app.use(express.json()); // To handle JSON payloads
 app.use(cors({
-  origin: "https://chat-web-application-puce.vercel.app",
+  origin: process.env.FRONTEND_URL, 
   methods: ['GET', 'POST', 'PUT', 'DELETE'], // Allowed methods
   credentials: true // If you want to allow cookies or auth headers
 }));

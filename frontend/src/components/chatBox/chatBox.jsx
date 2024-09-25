@@ -26,7 +26,7 @@ const ChatBox = () => {
         );
       });
       setLocalMessages(filteredMessages);
-      console.log(filteredMessages);
+      // console.log(filteredMessages);
     }
   }, [messages, chatUser, userData]); 
 

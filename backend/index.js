@@ -21,7 +21,8 @@ const io = socketIo(server, {
     origin: 'https://chat-web-application-puce.vercel.app',
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials: true
-  }
+  },
+  transports: ['websocket', 'polling'],
 });
 dotenv.config(); // Load environment variables
 app.use(express.json()); // To handle JSON payloads

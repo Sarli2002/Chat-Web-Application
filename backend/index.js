@@ -1,7 +1,6 @@
 const express = require('express');
 const http = require('http');
 const cors = require('cors');
-const path = require('path');
 const socketIo = require('socket.io');
 const mongoose = require('mongoose');
 const User = require('./models/user');  
@@ -9,6 +8,8 @@ const Message = require('./models/message');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const multer = require('multer');
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const dotenv = require('dotenv');
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -34,40 +35,47 @@ mongoose.connect(process.env.MONGO_URI, {
 }).then(() => console.log('MongoDB connected')).catch(err => console.log(err));
 
 
-// Multer configuration for file uploads
-const mediaStorage = multer.diskStorage({
-  destination: './upload/media/', 
-  filename: (req, file, cb) => {
-     cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`); 
-  }
+
+cloudinary.config({
+  cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET
 });
+
+// Multer storage setup for Cloudinary
+const mediaStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'media', // Folder name in Cloudinary
+    allowedFormats: ['jpg', 'jpeg', 'png'],
+    public_id: (req, file) => `${file.fieldname}_${Date.now()}`, // File naming pattern
+  },
+});
+
 const upload = multer({ storage: mediaStorage });
 
-// Serve static files from the uploads folder
-app.use('/media', express.static('upload/media'));
 
 // Image upload endpoint
 app.post('/upload', upload.single('image'), (req, res) => {
-
   if (!req.file) {
     return res.status(400).json({ message: 'No file uploaded' });
   }
-  const imageUrl = `${process.env.BACKEND_URL}/media/${req.file.filename}`;
+  const imageUrl = req.file.path; // Get URL from Cloudinary
   console.log('Uploaded file URL:', imageUrl);
   res.status(200).json({ imageUrl });
 });
 
 
-
-//Multer configuration for user avatar uploads
-const avatarStorage = multer.diskStorage({
-  destination: './upload/avatars/',
-  filename: (req, file, cb) => {
-    cb(null, `${file.fieldname}_${Date.now()}${path.extname(file.originalname)}`);  
-  }
+// Cloudinary storage for user avatar uploads
+const avatarStorage = new CloudinaryStorage({
+  cloudinary: cloudinary,
+  params: {
+    folder: 'avatars',
+    allowedFormats: ['jpg', 'jpeg', 'png'],
+    public_id: (req, file) => `${file.fieldname}_${Date.now()}`, // File naming pattern
+  },
 });
 
-// Only allow image files for avatar uploads
 const avatarUpload = multer({
   storage: avatarStorage,
   fileFilter: (req, file, cb) => {
@@ -79,8 +87,6 @@ const avatarUpload = multer({
   }
 });
 
-// Serve static files from the uploads folder
-app.use('/avatars', express.static('upload/avatars'));
 
 // Signup Route
 app.post('/signup', async (req, res) => {
@@ -182,7 +188,7 @@ app.put('/updateProfile', authenticateJWT, avatarUpload.single('avatar'), async 
 
     // If an avatar file is uploaded, process the file upload
     if (req.file) {
-      avatarUrl = `${process.env.BACKEND_URL}/avatars/${req.file.filename}`;  // Save the URL to the avatar
+      avatarUrl = req.file.path; // Get the URL of the uploaded avatar
     }
 
     // Extract user ID from JWT

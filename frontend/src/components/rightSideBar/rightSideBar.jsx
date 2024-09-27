@@ -5,19 +5,29 @@ import { AppContext } from '../../context/AppContext'
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 const RightSidebar = () => {
-    const { setUserData } = useContext(AppContext);
+    const { userData, setUserData } = useContext(AppContext);
   const { activeChat,messages } = useContext(AppContext);
   const [msgImages,setMsgImages] = useState([]);
   const navigate = useNavigate();
-  useEffect(() => {
-    const images = messages
-      .filter(msg => msg.image)  // Filter out messages with no image
-      .map(msg => msg.image);    // Extract image URLs
 
-    setMsgImages(images);
-  }, [messages]);
-  
- 
+  useEffect(() => {
+    if (activeChat) {
+        const images = messages
+            .filter(msg => msg.image) 
+            .filter(msg => {
+               const senderId = msg?.sId?._id;
+                const receiverId = msg?.rId?._id;
+                return (
+                  (senderId === userData._id && receiverId === activeChat._id) ||
+                 (senderId === activeChat._id && receiverId === userData._id)
+                );
+            }
+            )
+            .map(msg => msg.image); 
+
+        setMsgImages(images);
+    }
+}, [messages, activeChat, userData]);
 
   const logout = async () => {
     try {
